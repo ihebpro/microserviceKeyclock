@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: config-service
+  # Utilise le filesystem local comme backend de configuration.
+  # En production, remplacer par un backend Git (spring.cloud.config.server.git.uri)
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          # Répertoire contenant les fichiers YAML de configuration par service
+          search-locations: classpath:/config-repo
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        # Nom sous lequel le config-service apparaîtra dans Consul
+        service-name: config-service
+        health-check-path: /actuator/health
+        health-check-interval: 10s
+
+server:
+  port: 8888
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

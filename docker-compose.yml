@@ -1,0 +1,24 @@
+services:
+  # ── Serveur d'Authentification Keycloak ──────────────────────────────────
+  keycloak:
+    image: quay.io/keycloak/keycloak:25.0.0
+    container_name: logistics-keycloak
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HTTP_ENABLED: "true"
+      KC_HOSTNAME_STRICT: "false"
+      # Si vous utilisez des scripts JS dans Keycloak
+      KC_FEATURES: "scripts"
+    ports:
+      - "8180:8080"
+    command: start-dev
+
+  # ── Consul (Service Discovery & Configuration) ──────────────────────────
+  consul:
+    image: hashicorp/consul:1.15.4
+    container_name: logistics-consul
+    ports:
+      - "8500:8500"
+      - "8600:8600/udp"
+    command: "agent -dev -client=0.0.0.0"
