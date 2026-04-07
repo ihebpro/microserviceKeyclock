@@ -21,11 +21,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <!-- JPA / Hibernate pour la persistance locale des users/rôles -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
+
         <!-- Actuator pour le health check Consul -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -61,18 +57,8 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
         </dependency>
-        <!-- PostgreSQL : base de données de production -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <!-- H2 : base de données pour les tests unitaires -->
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>test</scope>
-        </dependency>
+
+
         <!-- OpenAPI Swagger UI -->
         <dependency>
             <groupId>org.springdoc</groupId>

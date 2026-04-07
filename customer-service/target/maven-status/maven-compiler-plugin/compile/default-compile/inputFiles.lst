@@ -1,0 +1,11 @@
+C:\Users\ihebL\OneDrive\Desktop\projects\Logistique\logistics-platform\customer-service\src\main\java\com\logistics\customer\api\controller\UserController.java
+C:\Users\ihebL\OneDrive\Desktop\projects\Logistique\logistics-platform\customer-service\src\main\java\com\logistics\customer\CustomerServiceApplication.java
+C:\Users\ihebL\OneDrive\Desktop\projects\Logistique\logistics-platform\customer-service\src\main\java\com\logistics\customer\api\dto\UserCreateDTO.java
+C:\Users\ihebL\OneDrive\Desktop\projects\Logistique\logistics-platform\customer-service\src\main\java\com\logistics\customer\api\exception\GlobalExceptionHandler.java
+C:\Users\ihebL\OneDrive\Desktop\projects\Logistique\logistics-platform\customer-service\src\main\java\com\logistics\customer\domain\model\User.java
+C:\Users\ihebL\OneDrive\Desktop\projects\Logistique\logistics-platform\customer-service\src\main\java\com\logistics\customer\domain\repository\UserRepository.java
+C:\Users\ihebL\OneDrive\Desktop\projects\Logistique\logistics-platform\customer-service\src\main\java\com\logistics\customer\infrastructure\config\SecurityConfig.java
+C:\Users\ihebL\OneDrive\Desktop\projects\Logistique\logistics-platform\customer-service\src\main\java\com\logistics\customer\application\service\UserService.java
+C:\Users\ihebL\OneDrive\Desktop\projects\Logistique\logistics-platform\customer-service\src\main\java\com\logistics\customer\api\dto\UserResponseDTO.java
+C:\Users\ihebL\OneDrive\Desktop\projects\Logistique\logistics-platform\customer-service\src\main\java\com\logistics\customer\domain\model\UserRole.java
+C:\Users\ihebL\OneDrive\Desktop\projects\Logistique\logistics-platform\customer-service\src\main\java\com\logistics\customer\api\dto\ApiErrorResponse.java

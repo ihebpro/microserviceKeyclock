@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * Contrôleur REST pour les opérations d'authentification et d'inscription.
  *
  * Routes exposées (accessibles sans JWT – endpoints publics) :
- *   POST /api/v1/auth/register → Inscription d'une nouvelle Company/utilisateur
+ *   POST /api/v1/auth/register → Inscription d'un nouvel utilisateur
  *   POST /api/v1/auth/login    → Authentification pour obtenir un JWT
  */
 @RestController

@@ -4,12 +4,14 @@ package com.logistics.identity.domain.model;
  * Value Object représentant les rôles métier dans la plateforme logistique.
  *
  * Ces rôles sont synchronisés avec Keycloak :
- *   - ADMIN           : accès total à toutes les ressources
- *   - WAREHOUSE_MANAGER : gère les entrepôts et opérations logistiques
- *   - CUSTOMER        : accès limité à ses propres données (Company, Contracts)
+ *   - ADMIN     : Accès total
+ *   - SELLER    : Vendeur (source de livraison)
+ *   - WAREHOUSE : Entrepôt (lieu de stockage et préparation)
+ *   - DRIVER    : Livreur (transport des colis)
  */
 public enum AppRole {
     ADMIN,
-    WAREHOUSE_MANAGER,
-    CUSTOMER
+    SELLER,
+    WAREHOUSE,
+    DRIVER
 }

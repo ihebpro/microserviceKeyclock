@@ -1,0 +1,79 @@
+# Configuration centrale pour gateway-service (Profil DEV)
+server:
+  port: 8080
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/realms/Nexus3PL
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: false
+      routes:
+        - id: identity-service
+          uri: lb://identity-service
+          predicates:
+            - Path=/api/v1/auth/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: identityCircuitBreaker
+                fallbackUri: forward:/fallback/identity
+        - id: customer-service
+          uri: lb://customer-service
+          predicates:
+            - Path=/api/v1/users/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: customerCircuitBreaker
+                fallbackUri: forward:/fallback/customer
+        - id: openapi-identity
+          uri: lb://identity-service
+          predicates:
+            - Path=/v3/api-docs/identity-service
+          filters:
+            - name: RewritePath
+              args:
+                regexp: /v3/api-docs/identity-service
+                replacement: /v3/api-docs
+        - id: openapi-customer
+          uri: lb://customer-service
+          predicates:
+            - Path=/v3/api-docs/customer-service
+          filters:
+            - name: RewritePath
+              args:
+                regexp: /v3/api-docs/customer-service
+                replacement: /v3/api-docs
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      identityCircuitBreaker:
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 5s
+      customerCircuitBreaker:
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 5s
+
+springdoc:
+  swagger-ui:
+    urls:
+      - name: Identity Service
+        url: /v3/api-docs/identity-service
+      - name: Customer Service
+        url: /v3/api-docs/customer-service
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway

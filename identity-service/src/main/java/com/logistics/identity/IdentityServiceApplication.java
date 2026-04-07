@@ -10,13 +10,16 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  *
  * Responsabilités :
  *   - Créer des comptes utilisateurs dans Keycloak via l'Admin REST API
- *   - Maintenir une représentation locale des utilisateurs (AppUser) avec leurs rôles métier
+ *   - Gérer les rôles directement dans Keycloak (RBAC)
  *   - Orchestrer l'inscription : création Keycloak + notification au Customer Service
  *
  * @EnableDiscoveryClient : s'enregistre auprès de Consul pour être découvrable
  * @EnableFeignClients    : active les clients Feign pour communiquer avec Customer Service
  */
-@SpringBootApplication
+@SpringBootApplication(exclude = {
+        org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration.class,
+        org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration.class
+})
 @EnableDiscoveryClient
 @EnableFeignClients
 public class IdentityServiceApplication {

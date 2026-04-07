@@ -71,16 +71,8 @@ public class KeycloakAdminClient {
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(formData, headers);
 
-        try {
-            ResponseEntity<Map> response = restTemplate.postForEntity(tokenUrl, request, Map.class);
-            return (Map<String, Object>) response.getBody();
-        } catch (HttpClientErrorException e) {
-            log.error("Erreur d'authentification Keycloak (HttpClientErrorException) pour l'utilisateur {}: {} - {}", username, e.getStatusCode(), e.getResponseBodyAsString());
-            throw new RuntimeException("Échec de l'authentification : identifiants incorrects ou erreur serveur");
-        } catch (Exception e) {
-            log.error("Erreur d'authentification Keycloak pour l'utilisateur {}: {}", username, e.getMessage());
-            throw new RuntimeException("Échec de l'authentification : identifiants incorrects ou erreur serveur");
-        }
+        ResponseEntity<Map> response = restTemplate.postForEntity(tokenUrl, request, Map.class);
+        return (Map<String, Object>) response.getBody();
     }
 
     /**
@@ -110,12 +102,14 @@ public class KeycloakAdminClient {
     /**
      * Crée un utilisateur dans le realm Keycloak configuré.
      *
-     * @param username Nom d'utilisateur unique
-     * @param email    Email de l'utilisateur (utilisé pour la connexion)
-     * @param password Mot de passe en clair (Keycloak le hashe côté serveur)
-     * @return keycloakUserId (UUID sous forme de String) de l'utilisateur créé
+     * @param username  Nom d'utilisateur unique
+     * @param email     Email
+     * @param firstName Prénom
+     * @param lastName  Nom
+     * @param password  Mot de passe
+     * @return keycloakUserId
      */
-    public String createUser(String username, String email, String password) {
+    public String createUser(String username, String email, String firstName, String lastName, String password) {
         String adminToken = getAdminToken();
         String createUserUrl = serverUrl + "/admin/realms/" + realm + "/users";
 
@@ -126,11 +120,10 @@ public class KeycloakAdminClient {
         Map<String, Object> userPayload = Map.of(
                 "username", username,
                 "email", email,
-                "firstName", username, // Prénom par défaut pour satisfaire le profil
-                "lastName", "Platform", // Nom par défaut
+                "firstName", firstName,
+                "lastName", lastName,
                 "enabled", true,
                 "emailVerified", true,
-                "requiredActions", List.of(), // Aucune action bloquante requise
                 "credentials", List.of(Map.of(
                         "type", "password",
                         "value", password,
@@ -141,11 +134,36 @@ public class KeycloakAdminClient {
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(userPayload, headers);
         ResponseEntity<Void> response = restTemplate.postForEntity(createUserUrl, request, Void.class);
 
-        // Keycloak retourne l'URL de l'utilisateur créé dans le header Location
-        // Le dernier segment est l'UUID de l'utilisateur
         String location = response.getHeaders().getFirst(HttpHeaders.LOCATION);
         String keycloakUserId = location.substring(location.lastIndexOf("/") + 1);
         log.info("Utilisateur Keycloak créé avec ID: {}", keycloakUserId);
         return keycloakUserId;
+    }
+
+    /**
+     * Assigne un rôle à un utilisateur dans Keycloak.
+     *
+     * @param userId   ID de l'utilisateur Keycloak (sub)
+     * @param roleName Nom du rôle (SELLER, WAREHOUSE, DRIVER, etc.)
+     */
+    public void assignRoleToUser(String userId, String roleName) {
+        String adminToken = getAdminToken();
+        log.info("Assignation du rôle {} à l'utilisateur Keycloak {}", roleName, userId);
+
+        // 1. Récupérer l'objet rôle depuis Keycloak pour avoir son ID interne
+        String getRoleUrl = serverUrl + "/admin/realms/" + realm + "/roles/" + roleName;
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(adminToken);
+        
+        HttpEntity<Void> getRequest = new HttpEntity<>(headers);
+        ResponseEntity<Map> roleResponse = restTemplate.exchange(getRoleUrl, HttpMethod.GET, getRequest, Map.class);
+        Map<String, Object> roleData = roleResponse.getBody();
+
+        // 2. Mapper le rôle à l'utilisateur
+        String mappingUrl = serverUrl + "/admin/realms/" + realm + "/users/" + userId + "/role-mappings/realm";
+        HttpEntity<List<Map<String, Object>>> mappingRequest = new HttpEntity<>(List.of(roleData), headers);
+        
+        restTemplate.postForLocation(mappingUrl, mappingRequest);
+        log.info("Rôle {} assigné avec succès.", roleName);
     }
 }

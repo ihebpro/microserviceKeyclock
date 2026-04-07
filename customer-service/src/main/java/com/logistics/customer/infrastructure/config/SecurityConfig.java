@@ -26,7 +26,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // Endpoints internes ( communication inter-services via Gateway ou internal call )
                 // Note : En prod, on restreindra davantage l'endpoint /internal.
-                .requestMatchers("/api/v1/companies/internal").permitAll()
+                .requestMatchers("/api/v1/users/internal").permitAll()
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .requestMatchers("/actuator/health", "/actuator/info").permitAll()
                 .anyRequest().authenticated()
