@@ -11,6 +11,13 @@ spring:
 
   cloud:
     gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:5173"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+            allowCredentials: true
       discovery:
         locator:
           enabled: false
